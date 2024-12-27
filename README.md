@@ -27,16 +27,25 @@ To verify Python is installed:
    - Press Win + X
    - Click "Windows Terminal (Admin)" or "Command Prompt (Admin)"
    
-2. Install the required packages by typing:
+2. Navigate to your project folder:
 ```bash
-pip install hidapi pillow
+cd PATH\streamdeck-controller
 ```
+
+3. Install the required packages using requirements.txt:
+```bash
+pip install -r requirements.txt
+```
+
+This will install all necessary dependencies automatically.
 
 ### 3. Set Up the Script
 
 1. Create a new folder somewhere easy to find (e.g., on your Desktop) called `streamdeck-controller`
 
-2. Save the Python script (the code from the previous message) as `streamdeck.py` in this folder
+2. Save these files in your folder:
+   - The Python script as `streamdeck.py`
+   - The requirements file as `requirements.txt`
 
 3. To run the script:
    - Open Command Prompt
@@ -92,4 +101,3 @@ Once everything is working:
 - You can modify the script to change what each key does
 - Consider creating a batch file (.bat) to make running the script easier
 
-Need help? Feel free to ask for clarification on any step!

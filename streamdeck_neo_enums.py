@@ -1,0 +1,13 @@
+import enum
+
+class StreamDeckNeoButton(enum.Enum):
+    TOP_LEFT = 4
+    TOP_CENTER_LEFT = 5
+    TOP_CENTER_RIGHT = 6
+    TOP_RIGHT = 7
+    BOTTOM_LEFT = 8
+    BOTTOM_CENTER_LEFT = 9
+    BOTTOM_CENTER_RIGHT = 10
+    BOTTOM_RIGHT = 11
+    TOUCH_SENSOR_LEFT = 12
+    TOUCH_SENSOR_RIGHT = 13

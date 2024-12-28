@@ -1,10 +1,11 @@
 import hid
 import time
-from streamdeck_neo_enums import StreamDeckNeoButton
+from button_enums import StreamDeckNeoButton
 from PIL import Image, ImageDraw, ImageFont
+from audio_control import AudioControl
 
 
-class MinimalDeck:
+class StreamDeckNeo:
     # Stream Deck Mini vendor/product IDs
     VENDOR_ID = 0x0FD9
     PRODUCT_ID = 0x009A  # You may need to verify this ID for your specific model
@@ -15,7 +16,9 @@ class MinimalDeck:
         self.device.open(self.VENDOR_ID, self.PRODUCT_ID)
         self.device.set_nonblocking(True)
         self.counter = 0
+        self.audio = AudioControl()
 
+    # DOES NOT WORK
     def set_text(self, key_number: int, text: str):
         """Set text on a specific key"""
         # Create a black image
@@ -48,9 +51,17 @@ class MinimalDeck:
     def handle_key(self, key_position):
         if key_position is not None:
             if key_position == StreamDeckNeoButton.TOP_LEFT.value:
-                print("TOP_LEFT hit!")
+                self.audio.toggle_mic()
+                if self.audio.mic_muted:
+                    print("mic is muted")
+                else:
+                    print("mic is on")
             elif key_position == StreamDeckNeoButton.TOP_CENTER_LEFT.value:
-                print("TOP_CENTER_LEFT hit!")
+                self.audio.toggle_volume()
+                if self.audio.volume_muted:
+                    print("volume is muted")
+                else:
+                    print("volume is on")
             elif key_position == StreamDeckNeoButton.TOP_CENTER_RIGHT.value:
                 print("TOP_CENTER_RIGHT hit!")
             elif key_position == StreamDeckNeoButton.TOP_RIGHT.value:
@@ -70,7 +81,8 @@ class MinimalDeck:
 
 
 if __name__ == "__main__":
-    deck = MinimalDeck()
+    deck = StreamDeckNeo()
+
     print("Listening for keypresses...")
 
     try:

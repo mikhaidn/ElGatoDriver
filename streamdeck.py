@@ -2,7 +2,7 @@ import hid
 import time
 from button_enums import StreamDeckNeoButton
 from PIL import Image, ImageDraw, ImageFont
-from audio_control import AudioControl
+from audio_driver import get_audio_driver
 
 
 class StreamDeckNeo:
@@ -16,7 +16,7 @@ class StreamDeckNeo:
         self.device.open(self.VENDOR_ID, self.PRODUCT_ID)
         self.device.set_nonblocking(True)
         self.counter = 0
-        self.audio = AudioControl()
+        self.audio = get_audio_driver()
 
     # DOES NOT WORK
     def set_text(self, key_number: int, text: str):
@@ -40,43 +40,46 @@ class StreamDeckNeo:
         try:
             data = self.device.read(255)
             if data:
-                # Check position of '1' in the array
-                for i in range(len(data) - 4):
-                    if data[i + 4] == 1:
-                        return i + 4
+                buttons = []
+                for button in StreamDeckNeoButton:
+                    if data[button.value] == 1:
+                        buttons.append(button)
+                return buttons
         except IOError:
             pass
-        return None
+        return []
 
-    def handle_key(self, key_position):
-        if key_position is not None:
-            if key_position == StreamDeckNeoButton.TOP_LEFT.value:
+    def handle_keys(self, key_positions):
+        if len(key_positions) > 1:
+            print("CHORD is hit!", f"{[k.name for k in key_positions]}")
+        for key_position in key_positions:
+            if key_position == StreamDeckNeoButton.TOP_LEFT:
                 self.audio.toggle_mic()
                 if self.audio.mic_muted:
                     print("mic is muted")
                 else:
                     print("mic is on")
-            elif key_position == StreamDeckNeoButton.TOP_CENTER_LEFT.value:
+            elif key_position == StreamDeckNeoButton.TOP_CENTER_LEFT:
                 self.audio.toggle_volume()
                 if self.audio.volume_muted:
                     print("volume is muted")
                 else:
                     print("volume is on")
-            elif key_position == StreamDeckNeoButton.TOP_CENTER_RIGHT.value:
+            elif key_position == StreamDeckNeoButton.TOP_CENTER_RIGHT:
                 print("TOP_CENTER_RIGHT hit!")
-            elif key_position == StreamDeckNeoButton.TOP_RIGHT.value:
+            elif key_position == StreamDeckNeoButton.TOP_RIGHT:
                 print("TOP_RIGHT hit!")
-            elif key_position == StreamDeckNeoButton.BOTTOM_LEFT.value:
+            elif key_position == StreamDeckNeoButton.BOTTOM_LEFT:
                 print("BOTTOM_LEFT hit!")
-            elif key_position == StreamDeckNeoButton.BOTTOM_CENTER_LEFT.value:
+            elif key_position == StreamDeckNeoButton.BOTTOM_CENTER_LEFT:
                 print("BOTTOM_CENTER_LEFT hit!")
-            elif key_position == StreamDeckNeoButton.BOTTOM_CENTER_RIGHT.value:
+            elif key_position == StreamDeckNeoButton.BOTTOM_CENTER_RIGHT:
                 print("BOTTOM_CENTER_RIGHT hit!")
-            elif key_position == StreamDeckNeoButton.BOTTOM_RIGHT.value:
+            elif key_position == StreamDeckNeoButton.BOTTOM_RIGHT:
                 print("BOTTOM_RIGHT hit!")
-            elif key_position == StreamDeckNeoButton.TOUCH_SENSOR_LEFT.value:
+            elif key_position == StreamDeckNeoButton.TOUCH_SENSOR_LEFT:
                 print("TOUCH_SENSOR_LEFT hit!")
-            elif key_position == StreamDeckNeoButton.TOUCH_SENSOR_RIGHT.value:
+            elif key_position == StreamDeckNeoButton.TOUCH_SENSOR_RIGHT:
                 print("TOUCH_SENSOR_RIGHT hit!")
 
 
@@ -88,8 +91,8 @@ if __name__ == "__main__":
     try:
         while True:
             key_position = deck.read_keys()
-            deck.handle_key(key_position)
-            time.sleep(0.1)
+            deck.handle_keys(key_position)
+            time.sleep(0.05)
 
     except KeyboardInterrupt:
         print("\nExiting...")

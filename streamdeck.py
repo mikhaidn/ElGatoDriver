@@ -2,7 +2,7 @@ import hid
 import time
 from button_enums import StreamDeckNeoButton
 from PIL import Image, ImageDraw, ImageFont
-from audio_driver import get_audio_driver
+from audio.driver_protocol import get_audio_driver
 
 
 class StreamDeckNeo:

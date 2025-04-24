@@ -1,7 +1,6 @@
-from pycaw.pycaw import AudioUtilities
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
-from pycaw.pycaw import IAudioEndpointVolume
 
 
 class WindowsAudioDriver:
